@@ -6,59 +6,55 @@
 
 <style>
 body{
-    margin:0;
-    font-family:Arial;
-    background:linear-gradient(135deg,#00aaff,#0066ff);
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:white;
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#00b4ff,#0066ff);
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
 }
 
 .box{
-    background:rgba(0,0,0,0.35);
-    padding:30px;
-    border-radius:12px;
-    width:600px;
-    text-align:center;
+background:rgba(0,0,0,0.35);
+padding:30px;
+border-radius:12px;
+width:600px;
+text-align:center;
 }
 
 input,textarea{
-    width:90%;
-    padding:10px;
-    border-radius:8px;
-    border:none;
-    margin-top:10px;
-    font-size:16px;
+width:90%;
+padding:10px;
+border-radius:8px;
+border:none;
+margin-top:10px;
+font-size:16px;
 }
 
 textarea{
-    height:160px;
+height:160px;
 }
 
 button{
-    margin-top:20px;
-    padding:10px 25px;
-    border:none;
-    border-radius:8px;
-    background:#00ffcc;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#00e6b8;
+margin-top:20px;
+padding:10px 25px;
+border:none;
+border-radius:8px;
+background:#00ffcc;
+font-weight:bold;
+cursor:pointer;
 }
 
 .hidden{
-    display:none;
+display:none;
 }
 
 .stop{
-    font-size:40px;
-    color:red;
-    font-weight:bold;
+font-size:40px;
+color:red;
+font-weight:bold;
 }
 </style>
 </head>
@@ -100,12 +96,11 @@ button:hover{
 
 <script>
 
-const webhook="https://discord.com/api/webhooks/1482391695113982012/91JZgJVyFM0jG_TRAC7FCZ837GW24jNUVW2xbtNC9uF8zYvdD9zC92uIWDXwmBPmgmzT"
-
 let cancelled=false
 
 function stopAI(){
-if(cancelled)return
+
+if(cancelled) return
 cancelled=true
 
 document.getElementById("start").classList.add("hidden")
@@ -113,6 +108,7 @@ document.getElementById("q1").classList.add("hidden")
 document.getElementById("q2").classList.add("hidden")
 
 document.getElementById("stop").classList.remove("hidden")
+
 }
 
 function startTest(){
@@ -126,32 +122,33 @@ return
 
 document.getElementById("start").classList.add("hidden")
 document.getElementById("q1").classList.remove("hidden")
+
 }
 
 function nextQuestion(){
+
 document.getElementById("q1").classList.add("hidden")
 document.getElementById("q2").classList.remove("hidden")
+
 }
 
-function submitTest(){
+async function submitTest(){
 
-if(cancelled)return
+if(cancelled) return
 
 let name=document.getElementById("username").value
 let a1=document.getElementById("answer1").value
 let a2=document.getElementById("answer2").value
 
-fetch(webhook,{
+await fetch("/api/send",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-content:
-" **Bài Thi Tuyển Support By Tthanhhub**\n\n"+
-" Tên: "+name+"\n\n"+
-"**Câu 1:**\n"+a1+"\n\n"+
-"**Câu 2:**\n"+a2
+name:name,
+q1:a1,
+q2:a2
 })
 })
 
@@ -165,13 +162,17 @@ document.getElementById("answer1").addEventListener("paste",stopAI)
 document.getElementById("answer2").addEventListener("paste",stopAI)
 
 document.addEventListener("visibilitychange",function(){
+
 if(document.hidden){
 stopAI()
 }
+
 })
 
 window.addEventListener("blur",function(){
+
 stopAI()
+
 })
 
 </script>
